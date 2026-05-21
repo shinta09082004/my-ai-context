@@ -432,8 +432,20 @@ fi
 ln -s "$CONTEXT_DIR" "$SYMLINK_PATH"
 echo "    → $SYMLINK_PATH → $CONTEXT_DIR"
 
-# --- Step 5: git post-push フックを作成 (my-ai-context 用) ---
-echo "[5/6] my-ai-context の post-push フックを設定..."
+# --- Step 5: /sync-drive コマンドをグローバルにインストール ---
+echo "[5/7] /sync-drive コマンドをインストール..."
+mkdir -p "$HOME/.claude/commands"
+SYNC_DRIVE_SRC="$MY_AI_CONTEXT_DIR/.claude-commands/sync-drive.md"
+SYNC_DRIVE_DST="$HOME/.claude/commands/sync-drive.md"
+if [ -f "$SYNC_DRIVE_SRC" ]; then
+  cp "$SYNC_DRIVE_SRC" "$SYNC_DRIVE_DST"
+  echo "    → $SYNC_DRIVE_DST にインストールしました"
+else
+  echo "    ⚠️  $SYNC_DRIVE_SRC が見つかりません（スキップ）"
+fi
+
+# --- Step 6: git post-push フックを作成 (my-ai-context 用) ---
+echo "[6/7] my-ai-context の post-push フックを設定..."
 HOOK_PATH="$MY_AI_CONTEXT_DIR/.git/hooks/post-push"
 cat > "$HOOK_PATH" << 'HOOKEOF'
 #!/bin/bash
@@ -446,7 +458,7 @@ chmod +x "$HOOK_PATH"
 echo "    → $HOOK_PATH を作成しました"
 
 # --- Step 6: 完了 ---
-echo "[6/6] 完了!"
+echo "[7/7] 完了!"
 echo ""
 echo "✅ セットアップ完了: $PROJECT_NAME"
 echo ""
@@ -455,6 +467,7 @@ echo "  $CONTEXT_DIR/Rules.md"
 echo "  $AGENTS_DIR/ (8 agents)"
 echo "  $SYMLINK_PATH -> $CONTEXT_DIR"
 echo "  $HOOK_PATH (post-push hook)"
+echo "  $SYNC_DRIVE_DST (/sync-drive コマンド)"
 echo ""
 echo "次のステップ:"
 echo "  1. $CONTEXT_DIR/Rules.md を開いてプロジェクト詳細を記入"
