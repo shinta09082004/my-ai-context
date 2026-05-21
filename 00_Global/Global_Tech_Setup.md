@@ -35,6 +35,7 @@
 | プロジェクト | パス | 説明 |
 |---|---|---|
 | **karaoke-AI** | `/workspaces/karaoke/` | カラオケ曲検索サービス (Web + Mobile) |
+| **Green Battery** | `/workspaces/greenbattery/` | Webアプリ（詳細未確定） |
 
 ## よく使うコマンド
 
