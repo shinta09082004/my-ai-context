@@ -432,8 +432,21 @@ fi
 ln -s "$CONTEXT_DIR" "$SYMLINK_PATH"
 echo "    → $SYMLINK_PATH → $CONTEXT_DIR"
 
-# --- Step 5: 完了 ---
-echo "[5/5] 完了!"
+# --- Step 5: git post-push フックを作成 (my-ai-context 用) ---
+echo "[5/6] my-ai-context の post-push フックを設定..."
+HOOK_PATH="$MY_AI_CONTEXT_DIR/.git/hooks/post-push"
+cat > "$HOOK_PATH" << 'HOOKEOF'
+#!/bin/bash
+echo ""
+echo "✅ GitHub push 完了"
+echo "📁 Obsidian に反映するには Claude Code で /sync-drive を実行してください"
+echo ""
+HOOKEOF
+chmod +x "$HOOK_PATH"
+echo "    → $HOOK_PATH を作成しました"
+
+# --- Step 6: 完了 ---
+echo "[6/6] 完了!"
 echo ""
 echo "✅ セットアップ完了: $PROJECT_NAME"
 echo ""
@@ -441,7 +454,9 @@ echo "作成されたファイル:"
 echo "  $CONTEXT_DIR/Rules.md"
 echo "  $AGENTS_DIR/ (8 agents)"
 echo "  $SYMLINK_PATH -> $CONTEXT_DIR"
+echo "  $HOOK_PATH (post-push hook)"
 echo ""
 echo "次のステップ:"
 echo "  1. $CONTEXT_DIR/Rules.md を開いてプロジェクト詳細を記入"
 echo "  2. Claude Code を $PROJECT_DIR で起動してエージェントを確認"
+echo "  3. git push 後は /sync-drive を実行して Obsidian に同期"
